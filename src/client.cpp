@@ -16,11 +16,12 @@ void erase (int y, int x) {
 }
 
 
-void game_loop(Mob player) {
+void game_loop(Frame &game_map, Frame &viewport, Mob player) {
   InputMapper mapper;
 
-  mvaddch(player.getY(), player.getX(), player.getSymbol());
-
+  game_map.add(player);
+  viewport.center(player);
+  viewport.refresh();
   while(true) {
     int input = getch();
     if (input == KEY_EXIT) {
@@ -31,8 +32,10 @@ void game_loop(Mob player) {
     if (action) {
       erase(player.getY(), player.getX());
       action->execute(player);
-      mvaddch(player.getY(), player.getX(), player.getSymbol());
-      refresh();
+      game_map.add(player);
+      viewport.center(player);
+      viewport.refresh();
+
     }
 
   }
@@ -44,22 +47,22 @@ bool printWelcomeMessage(Screen &scr) {
 
     int input = getch();
     return input != KEY_EXIT;
-    
+
 
 }
 
 int main (int argc, char *argv[]) {
 
-  int x = 1;
-  int y = 15;
-
   Screen scr;
   printWelcomeMessage(scr);
 
+  Frame game_map(2*scr.getHeight(), 2*scr.getWidth(), 0, 0);
+  Frame viewport(game_map, scr.getHeight(), scr.getWidth(), 0, 0);
+
   clear();
-  Mob player = Mob(x, y, '@');
-  clear();
-  game_loop(player);
+  Mob player = Mob(game_map.getHeight()/2, game_map.getWidth()/2, '@');
+//  game_map.fillWindow();
+  game_loop(game_map, viewport, player);
 
 
 }

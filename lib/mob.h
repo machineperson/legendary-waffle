@@ -30,6 +30,11 @@ public:
   int getSymbol() {
     return symbol;
   }
+
+  void pos(int y_new, int x_new) {
+    x = x_new;
+    y = y_new;
+  }
 };
 
 
