@@ -54,15 +54,16 @@ bool printWelcomeMessage(Screen &scr) {
 int main (int argc, char *argv[]) {
 
   Screen scr;
-  printWelcomeMessage(scr);
+  bool continueGame = printWelcomeMessage(scr);
 
-  Frame game_map(2*scr.getHeight(), 2*scr.getWidth(), 0, 0);
-  Frame viewport(game_map, scr.getHeight(), scr.getWidth(), 0, 0);
+  if(continueGame) {
+    Frame game_map(2*scr.getHeight(), 2*scr.getWidth(), 0, 0);
+    Frame viewport(game_map, scr.getHeight(), scr.getWidth(), 0, 0);
 
-  clear();
-  Mob player = Mob(game_map.getHeight()/2, game_map.getWidth()/2, '@');
-//  game_map.fillWindow();
-  game_loop(game_map, viewport, player);
-
+    clear();
+    Mob player = Mob(game_map.getHeight()/2, game_map.getWidth()/2, '@');
+  //  game_map.fillWindow();
+    game_loop(game_map, viewport, player);
+  }
 
 }
