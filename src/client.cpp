@@ -22,6 +22,8 @@ void game_loop(Frame &game_map, Frame &viewport, Mob player) {
   game_map.add(player);
   viewport.center(player);
   viewport.refresh();
+
+
   while(true) {
     int input = getch();
     if (input == KEY_EXIT) {
@@ -30,7 +32,7 @@ void game_loop(Frame &game_map, Frame &viewport, Mob player) {
 
     Action* action = mapper.mapInput(input);
     if (action) {
-      erase(player.getY(), player.getX());
+      game_map.erase(player);
       action->execute(player);
       game_map.add(player);
       viewport.center(player);

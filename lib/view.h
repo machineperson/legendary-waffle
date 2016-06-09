@@ -2,6 +2,7 @@
 #define VIEW_H
 
 #include <ncurses.h>
+#include <iostream>
 
 class Screen {
   int height, width;
@@ -60,7 +61,7 @@ public:
   {
 
     parent = NULL;
-    w = newwin(height, width, x_0, y_0);
+    w = newwin(height, width, y_0, x_0);
     box(w, 0, 0);
     wrefresh(w);
   }
@@ -73,7 +74,7 @@ public:
     x_0(col_0),
     isSubwindow(true)
     {
-     w = derwin(parent, height, width, x_0, y_0);
+     w = derwin(parent, height, width, y_0, x_0);
      box(w, 0, 0);
      touchwin(parent);
      wrefresh(w);
@@ -101,9 +102,17 @@ public:
         }
     }
 
+    void add(char c, int y, int x) {
+        if((y >= 0 && y_0 + y < height)
+        && (x >= 0 && x_0 + x < width)) {
+          mvwaddch(w, y, x, c);
+        }
+    }
+
     void refresh() {
      if(parent) {
        touchwin(parent);
+
      }
      wrefresh(w);
     }
@@ -142,6 +151,9 @@ public:
       int new_x0 = x_0, new_y0 = y_0;
       int parent_height, parent_width;
 
+      std::cerr << "Mob is at " << mob.getY() << ", " << mob.getX() << "\n";
+      std::cerr << "viewport is at " << new_y0 << ", " << new_x0 << "\n";
+
       int center_dist_y = mob.getY() - height / 2;
       int center_dist_x = mob.getX() - width / 2;
 
@@ -170,16 +182,20 @@ public:
       if(center_dist_x < 0) {
         new_x0 = 0;
       }
-
       move(new_y0, new_x0);
+      std::cerr << "Mob is at " << mob.getY() << ", " << mob.getX() << "\n";
+      std::cerr << "viewport is at " << new_y0 << ", " << new_x0 << "\n";
+      std::cerr << "parent has size " << parent_height << ", " << parent_width << "\n";
 
-    }
+
+      }
 
     void move(int y, int x) {
       if(parent) {
         mvderwin(w, y, x);
         x_0 = x;
         y_0 = y;
+    //    box(w, 0, 0);
         refresh();
       }
 

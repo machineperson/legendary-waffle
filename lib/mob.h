@@ -11,10 +11,10 @@ private:
   int y;
   char symbol;
 public:
-  Mob(int x_, int y_, char symbol_) : x(x_), y(y_), symbol(symbol_) {
+  Mob(int y_, int x_, char symbol_) : y(y_), x(x_), symbol(symbol_) {
   }
 
-  void move(int dx, int dy) {
+  void move(int dy, int dx) {
     x += dx;
     y += dy;
   }

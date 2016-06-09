@@ -15,39 +15,39 @@ private:
   int deltaY;
 
 public:
-  MoveAction(int dx, int dy) {
+  MoveAction(int dy, int dx) {
     deltaX = dx;
     deltaY = dy;
   }
 
   virtual void execute(Mob &mob) {
-    mob.move(deltaX, deltaY);
+    mob.move(deltaY, deltaX);
   }
 };
 
 class MoveLeft : public MoveAction {
 public:
-  MoveLeft() : MoveAction(-1, 0) {
+  MoveLeft() : MoveAction(0, -1) {
   }
 };
 
 
 class MoveRight : public MoveAction {
 public:
-  MoveRight() : MoveAction(1, 0) {}
+  MoveRight() : MoveAction(0, 1) {}
 
 };
 
 
 class MoveUp : public MoveAction {
 public:
-  MoveUp() : MoveAction(0, -1) {}
+  MoveUp() : MoveAction(-1, 0) {}
 };
 
 
 class MoveDown : public MoveAction {
 public:
-  MoveDown() : MoveAction(0, 1) {}
+  MoveDown() : MoveAction(1, 0) {}
 
 };
 
