@@ -15,57 +15,53 @@ void erase (int y, int x) {
   mvaddch(y, x, ' ');
 }
 
+void printWelcomeMessage(Screen &scr) {
 
-void game_loop(Frame &game_map, Frame &viewport, Mob player) {
+    scr.printMessage("Greetings, comrade! You are a raccoon. Your ultimate goals are to bring about the destruction of capitalism and find the ultimate waffle of legends.\n Your immediate goal is to scavenge for food because you are hungry. Good luck! \n Press any key to start the game.");
+
+}
+
+
+void game_loop(Screen &scr, Frame &game_map, Frame &viewport, Mob player) {
   InputMapper mapper;
+  printWelcomeMessage(scr);
 
-  game_map.add(player);
-  viewport.center(player);
-  viewport.refresh();
-
-
+  int i = 0;
   while(true) {
+    std::cerr << "wait \n";
+
+
     int input = getch();
     if (input == KEY_EXIT) {
       return;
     }
 
+    std::cerr << "input " << input <<"  \n";
+
     Action* action = mapper.mapInput(input);
     if (action) {
       game_map.erase(player);
       action->execute(player);
-      game_map.add(player);
-      viewport.center(player);
-      viewport.refresh();
 
+      std::cerr << "refreshing " << i++ <<"\n";
     }
+    game_map.add(player);
+    viewport.center(player);
+    viewport.refresh();
 
   }
-}
-
-bool printWelcomeMessage(Screen &scr) {
-
-    scr.printMessage("Greetings, comrade! You are a raccoon. Your ultimate goals are to bring about the destruction of capitalism and find the ultimate waffle of legends.\n Your immediate goal is to scavenge for food because you are hungry. Good luck! \n Press any key to start the game.");
-
-    int input = getch();
-    return input != KEY_EXIT;
-
-
 }
 
 int main (int argc, char *argv[]) {
 
   Screen scr;
-  bool continueGame = printWelcomeMessage(scr);
+  Frame game_map(2*scr.getHeight(), 2*scr.getWidth(), 0, 0);
+  Frame viewport(game_map, scr.getHeight(), scr.getWidth(), 0, 0);
 
-  if(continueGame) {
-    Frame game_map(2*scr.getHeight(), 2*scr.getWidth(), 0, 0);
-    Frame viewport(game_map, scr.getHeight(), scr.getWidth(), 0, 0);
 
-    clear();
-    Mob player = Mob(game_map.getHeight()/2, game_map.getWidth()/2, '@');
-  //  game_map.fillWindow();
-    game_loop(game_map, viewport, player);
-  }
+
+  Mob player = Mob(game_map.getHeight()/2, game_map.getWidth()/2, '@');
+  game_loop(scr, game_map, viewport, player);
+
 
 }

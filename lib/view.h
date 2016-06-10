@@ -75,7 +75,7 @@ public:
     isSubwindow(true)
     {
      w = derwin(parent, height, width, y_0, x_0);
-     box(w, 0, 0);
+
      touchwin(parent);
      wrefresh(w);
     }
@@ -90,7 +90,6 @@ public:
 
     void erase(Mob &x) {
       mvwaddch(w, x.getY(), x.getX(), ' ');
-
     }
 
     void add(Mob &mob, int y, int x) {
@@ -112,10 +111,9 @@ public:
     void refresh() {
      if(parent) {
        touchwin(parent);
-
      }
      wrefresh(w);
-    }
+   }
 
     void fillWindow() {
       int max_x = width / 2;
@@ -186,6 +184,8 @@ public:
       std::cerr << "Mob is at " << mob.getY() << ", " << mob.getX() << "\n";
       std::cerr << "viewport is at " << new_y0 << ", " << new_x0 << "\n";
       std::cerr << "parent has size " << parent_height << ", " << parent_width << "\n";
+      char symbol = mvwinch(parent, mob.getY(), mob.getX());
+      std::cerr << "Player symbol " << symbol;
 
 
       }
