@@ -3,6 +3,7 @@
 
 #include <ncurses.h>
 #include <iostream>
+#include "territory.h"
 
 class Screen {
   int height, width;
@@ -64,6 +65,7 @@ public:
     w = newwin(height, width, y_0, x_0);
     box(w, 0, 0);
     wrefresh(w);
+
   }
 
   Frame(Frame& pw, int n_rows, int n_cols, int row_0, int col_0) :
@@ -84,8 +86,10 @@ public:
 	     delwin(w);
      }
 
-    void add(Mob &x) {
-      mvwaddch(w, x.getY(), x.getX(), x.getSymbol());
+    void add(Mob &mob) {
+      char prev = mvwinch(w, mob.getY(), mob.getX());
+      mvwaddch(w, mob.getY(), mob.getX(), mob.getSymbol());
+      std::cerr << "prev " << prev << '\n';
     }
 
     void erase(Mob &x) {
@@ -95,6 +99,7 @@ public:
     void add(Mob &mob, int y, int x) {
         if((y >= 0 && y_0 + y < height)
         && (x >= 0 && x_0 + x < width)) {
+          
           erase(mob);
           mvwaddch(w, y, x, mob.getSymbol());
           mob.pos(y, x);
@@ -104,7 +109,11 @@ public:
     void add(char c, int y, int x) {
         if((y >= 0 && y_0 + y < height)
         && (x >= 0 && x_0 + x < width)) {
+          std::cerr << "adding char "<< c << " at " << y << ", " << x << "\n";
           mvwaddch(w, y, x, c);
+        }
+        else {
+          std::cerr << "out of bounds\n";
         }
     }
 
@@ -113,6 +122,20 @@ public:
        touchwin(parent);
      }
      wrefresh(w);
+   }
+
+   void populateRandom() {
+     Territory territory;
+
+     for(int i = 0; i < height; i++) {
+       for(int k = 0; k < width; k++) {
+           double x = (double) k / ((double) width);
+           double y = (double) i / ((double) width);
+           char cell = territory.random(10.0*x, 10.0*y);
+           std::cerr << "char " << cell << "in " << k << ", " << i << '\n';
+           add(cell, i, k);
+       }
+     }
    }
 
     void fillWindow() {

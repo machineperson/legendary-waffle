@@ -11,6 +11,7 @@
 #include "view.h"
 
 
+
 void erase (int y, int x) {
   mvaddch(y, x, ' ');
 }
@@ -45,7 +46,7 @@ void game_loop(Screen &scr, Frame &game_map, Frame &viewport, Mob player) {
       std::cerr << "refreshing " << i++ <<"\n";
     }
     game_map.add(player);
-    
+
     viewport.center(player);
     viewport.refresh();
 
@@ -61,6 +62,7 @@ int main (int argc, char *argv[]) {
   Frame viewport(game_map, scr.getHeight(), scr.getWidth(), 0, 0);
 
   Mob player = Mob(game_map.getHeight()/2, game_map.getWidth()/2, '@');
+  game_map.populateRandom();
   game_loop(scr, game_map, viewport, player);
 
 
