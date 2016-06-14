@@ -122,29 +122,23 @@ public:
 // This maps Perlin noise to a meaningful territory
 class Territory {
   PerlinNoise noiseGenerator;
-
-
-  char specialThing() {
-    // todo make this more special
-    return 'S';
-  }
+  std::mt19937 randomGenerator;
 
   char territory(double x) {
-    if(x <= -0.1) {
+    if(x <= 0.0) {
       return ' ';
     }
-    else if (-0.1 < x && x <= 0.4) {
-      // trees
-      return 'X';
+    else if (0.0 < x && x <= 0.4) {
+      // probability in percent...
+      int treeProbability = 10;
+      int diceRoll = randomGenerator() % 100;
+      return (diceRoll < treeProbability) ? 'X' : ' ';
     }
-    else if (0.4 < x && x <= 0.95) {
+    else if (0.4 < x && x <= 1.0) {
       // water
       return '~';
     }
-    else {
-      // special things to find
-      return specialThing();
-    }
+
   }
 
 public:
