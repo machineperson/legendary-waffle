@@ -10,6 +10,12 @@ private:
   int x;
   int y;
   char symbol;
+
+  // the territory the mob is currently standing on
+  // (to write back after it moves away, if applicable)
+  char territory;
+
+
 public:
   Mob(int y_, int x_, char symbol_) : y(y_), x(x_), symbol(symbol_) {
   }

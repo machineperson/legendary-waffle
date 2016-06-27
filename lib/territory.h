@@ -27,23 +27,23 @@ class PerlinNoise {
     double result = 0.00;
     switch (hash & 0x3) {
       case 0x0: {
-        std::cerr << "case 0, returning " << x + y << " \n";
+
         return x + y;
       }
       case 0x1: {
-        std::cerr << "case 1, returning " << -x + y << " \n";
+
         return  (double) -x + y;
       }
       case 0x2: {
-        std::cerr << "case 2, returning " << x - y << " \n";
+
         return  (double) x - y;
       }
       case 0x3: {
-        std::cerr << "case 3, returning " << -x - y << " \n";
+
         return (double) -x - y;
       }
       default: {
-        std::cerr << "noooooo!\n";
+
         return 0;
       }
     }
@@ -52,9 +52,9 @@ class PerlinNoise {
 public:
   PerlinNoise() {
     std::default_random_engine();
-    p.resize(256);
+    p.resize(64);
 
-    std::iota(p.begin(), p.end(), 256);
+    std::iota(p.begin(), p.end(), 64);
     std::random_shuffle(p.begin(), p.end());
 
     // duplicate the permutation vector,
@@ -69,8 +69,8 @@ public:
 
     // coordinates of the unit cell that
     // our coordinate is in.
-    int x0 = (int) x & 255;
-    int y0 = (int) y & 255;
+    int x0 = (int) x & 63;
+    int y0 = (int) y & 63;
 
     // location of our vector inside the unit cube
     double xf = x - std::floor(x);
@@ -101,23 +101,26 @@ public:
               grad(g3, xf-1, yf-1));
 
     y1 = lerp(v, x1, x2);
-    std::cerr << "g0 is " << grad(g0, xf, yf) << '\n';
-    std::cerr << "g2 is " << grad(g2, xf-1, yf) << '\n';
-    std::cerr << "x1 is " << x1 << '\n';
-    std::cerr << "x is " << x << '\n';
-    std::cerr << "y is " << y << '\n';
-    std::cerr << "fabs(x) is " << std::fabs(x) << '\n';
-
-
-
-    std::cerr << "xf is " << xf << '\n';
-    std::cerr << "yf is " << yf << '\n';
-    std::cerr << "v is " << v << '\n';
 
     return y1;
 
   }
 };
+
+enum TerritoryType : char {
+  None = ' ',
+  Tree = '#',
+  Water = '~',
+  Food = '!'
+};
+
+std::map<TerritoryType, bool> isRemovable = {
+  {TerritoryType::None, false},
+  {TerritoryType::Tree, false},
+  {TerritoryType::Water, false},
+  {TerritoryType::None, true},
+}
+
 
 // This maps Perlin noise to a meaningful territory
 class Territory {
@@ -126,17 +129,24 @@ class Territory {
 
   char territory(double x) {
     if(x <= 0.0) {
-      return ' ';
+      return TerritoryType::None;
     }
     else if (0.0 < x && x <= 0.4) {
       // probability in percent...
       int treeProbability = 10;
+      // chosen by fair dice roll
+      // guaranteed to be random
       int diceRoll = randomGenerator() % 100;
-      return (diceRoll < treeProbability) ? 'X' : ' ';
+      return (diceRoll < treeProbability)
+              ? TerritoryType::Tree
+              : TerritoryType::None;
     }
-    else if (0.4 < x && x <= 1.0) {
+    else if (0.4 < x && x <= 0.8) {
       // water
-      return '~';
+      return TerritoryType::Water;
+    }
+    else {
+      return TerritoryType::Food;
     }
 
   }

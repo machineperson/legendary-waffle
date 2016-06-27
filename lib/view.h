@@ -3,6 +3,7 @@
 
 #include <ncurses.h>
 #include <iostream>
+#include <ctime>
 #include "territory.h"
 
 class Screen {
@@ -99,7 +100,7 @@ public:
     void add(Mob &mob, int y, int x) {
         if((y >= 0 && y_0 + y < height)
         && (x >= 0 && x_0 + x < width)) {
-          
+
           erase(mob);
           mvwaddch(w, y, x, mob.getSymbol());
           mob.pos(y, x);
@@ -127,15 +128,21 @@ public:
    void populateRandom() {
      Territory territory;
 
+     std::clock_t start;
+     int count = 0;
      for(int i = 0; i < height; i++) {
        for(int k = 0; k < width; k++) {
            double x = (double) k / ((double) width);
            double y = (double) i / ((double) width);
-           char cell = territory.random(10.0*x, 10.0*y);
-           std::cerr << "char " << cell << "in " << k << ", " << i << '\n';
+           start = std::clock();
+
+           char cell = territory.random(5.0*x, 5.0*y);
+           std::cerr << "Time: " << (std::clock() - start) / (double)(CLOCKS_PER_SEC / 1000) << " ms" << std::endl;
            add(cell, i, k);
+           count++;
        }
      }
+     std::cerr << "COUNT: " << count << std::endl;
    }
 
     void fillWindow() {
