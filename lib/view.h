@@ -87,24 +87,28 @@ public:
 	     delwin(w);
      }
 
-    void add(Mob &mob) {
+    char add(Mob &mob) {
       char prev = mvwinch(w, mob.getY(), mob.getX());
       mvwaddch(w, mob.getY(), mob.getX(), mob.getSymbol());
       std::cerr << "prev " << prev << '\n';
+      return prev;
     }
 
     void erase(Mob &x) {
       mvwaddch(w, x.getY(), x.getX(), ' ');
     }
 
-    void add(Mob &mob, int y, int x) {
+    char add(Mob &mob, int y, int x) {
         if((y >= 0 && y_0 + y < height)
         && (x >= 0 && x_0 + x < width)) {
+          char prev = mvwinch(w, y, x);
 
           erase(mob);
           mvwaddch(w, y, x, mob.getSymbol());
           mob.pos(y, x);
+          return prev;
         }
+        return '0';
     }
 
     void add(char c, int y, int x) {
@@ -144,35 +148,6 @@ public:
      }
      std::cerr << "COUNT: " << count << std::endl;
    }
-
-    void fillWindow() {
-      int max_x = width / 2;
-      int max_y = height / 2;
-
-
-    	for(int y = 0; y < max_y; ++y) {
-    		for(int x = 0; x < max_x; ++x) {
-    			mvwaddch(w, y, x, '0');
-    		}
-    	}
-
-      for(int y = 0; y < max_y; ++y) {
-        for(int x = max_x; x < width; ++x) {
-          mvwaddch(w, y, x, '1');
-        }
-      }
-
-      for(int y = max_y; y < height; ++y) {
-        for(int x = 0; x < max_x; ++x) {
-          mvwaddch(w, y, x, '2');
-        }
-      }
-      for(int y = max_y; y < height; ++y) {
-        for(int x = max_x; x < width; ++x) {
-          mvwaddch(w, y, x, '3');
-        }
-      }
-    }
 
     void center(Mob &mob) {
       // TODO

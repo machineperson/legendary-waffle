@@ -118,8 +118,15 @@ std::map<TerritoryType, bool> isRemovable = {
   {TerritoryType::None, false},
   {TerritoryType::Tree, false},
   {TerritoryType::Water, false},
+  {TerritoryType::Food, true},
+};
+
+std::map<TerritoryType, bool> canMoveInto = {
   {TerritoryType::None, true},
-}
+  {TerritoryType::Tree, false},
+  {TerritoryType::Water, true},
+  {TerritoryType::Food, true},
+};
 
 
 // This maps Perlin noise to a meaningful territory
@@ -132,21 +139,25 @@ class Territory {
       return TerritoryType::None;
     }
     else if (0.0 < x && x <= 0.4) {
+      int foodProbability = 1;
+
+      int diceRollFood = randomGenerator() % 100;
+      if (diceRollFood < foodProbability) {
+        return TerritoryType::Food;
+      }
+
       // probability in percent...
       int treeProbability = 10;
       // chosen by fair dice roll
       // guaranteed to be random
-      int diceRoll = randomGenerator() % 100;
-      return (diceRoll < treeProbability)
+      int diceRollTree = randomGenerator() % 100;
+      return (diceRollTree < treeProbability)
               ? TerritoryType::Tree
               : TerritoryType::None;
     }
-    else if (0.4 < x && x <= 0.8) {
-      // water
+    else if (0.4 < x) {
+
       return TerritoryType::Water;
-    }
-    else {
-      return TerritoryType::Food;
     }
 
   }

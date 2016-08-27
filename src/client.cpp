@@ -28,9 +28,13 @@ void game_loop(Screen &scr, Frame &game_map, Frame &viewport, Mob player) {
   printWelcomeMessage(scr);
 
   int i = 0;
+
+
+  char currentTerritory = '0';
+
+
   while(true) {
     std::cerr << "wait \n";
-
 
     int input = getch();
     if (input == KEY_EXIT) {
@@ -39,14 +43,39 @@ void game_loop(Screen &scr, Frame &game_map, Frame &viewport, Mob player) {
 
     std::cerr << "input " << input <<"  \n";
 
+    int xPreMove = player.getX();
+    int yPreMove = player.getY();
+
     Action* action = mapper.mapInput(input);
     if (action) {
       game_map.erase(player);
       action->execute(player);
       std::cerr << "refreshing " << i++ <<"\n";
     }
-    game_map.add(player);
 
+    currentTerritory = game_map.add(player);
+    int xPostMove = player.getX();
+    int yPostMove = player.getY();
+    // 1. can the player move there?
+    if (!canMoveInto[static_cast<TerritoryType>(currentTerritory)]) {
+      std::cerr << "cannot move into this territory"<< '\n';
+      std::cerr << "player was at  " << yPreMove << ", " << xPreMove << '\n';
+      std::cerr << "player was moving to  " << yPostMove << ", " << xPostMove << '\n';
+
+      // move the player back to their original position
+      player.pos(yPreMove, xPreMove);
+      // put the original territory back
+      game_map.add(currentTerritory, yPostMove, xPostMove);
+
+      game_map.add(player);
+    }
+
+    else if (!isRemovable[static_cast<TerritoryType>(currentTerritory)]) {
+      std::cerr << "putting back territory " << currentTerritory << '\n';
+      game_map.add(currentTerritory, yPreMove, xPreMove);
+    }
+
+    std::cerr << "current territory: " << currentTerritory << '\n';
     viewport.center(player);
     viewport.refresh();
 
