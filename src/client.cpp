@@ -74,7 +74,9 @@ void game_loop(Screen &scr, Frame &game_map, Frame &viewport, Mob player) {
       std::cerr << "putting back territory " << currentTerritory << '\n';
       game_map.add(currentTerritory, yPreMove, xPreMove);
     }
-
+    else {
+      player.interact(static_cast<TerritoryType>(currentTerritory));
+    }
     std::cerr << "current territory: " << currentTerritory << '\n';
     viewport.center(player);
     viewport.refresh();

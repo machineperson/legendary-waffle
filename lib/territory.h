@@ -3,7 +3,7 @@
 
 #include <algorithm>
 #include <numeric>
-
+#include <map>
 #include <iostream>
 
 class PerlinNoise {
@@ -138,7 +138,7 @@ class Territory {
     if(x <= 0.0) {
       return TerritoryType::None;
     }
-    else if (0.0 < x && x <= 0.4) {
+    else if (0.0 < x && x <= 0.5) {
       int foodProbability = 1;
 
       int diceRollFood = randomGenerator() % 100;
