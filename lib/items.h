@@ -8,8 +8,9 @@ class Item {
 public:
   std::string name;
   int weight;
+  char shortcut;
 
-  Item(std::string name_, int weight_) : name(name_), weight(weight_)
+  Item(std::string name_, int weight_, char shortcut_=' ') : name(name_), weight(weight_), shortcut(shortcut_)
   {}
 
 
@@ -18,9 +19,9 @@ public:
 class FoodItem : public Item {
 
 public:
-  FoodItem(std::string name_,  int weight_) : Item(name_, weight)
+  FoodItem(std::string name_,  int weight_, char shortcut_=' ') : Item(name_, weight_, shortcut_)
   {
-
+    
   }
 
 

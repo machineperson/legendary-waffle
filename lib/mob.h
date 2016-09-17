@@ -72,6 +72,10 @@ public:
     }
   }
 
+  std::vector<Item> getInventory() {
+    return std::vector<Item>(inventory);
+  }
+
 };
 
 

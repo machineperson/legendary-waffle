@@ -20,8 +20,6 @@ public:
     keypad(stdscr, TRUE);
     curs_set(0);
 
-
-
   }
   ~Screen() {};
 
@@ -122,11 +120,23 @@ public:
         }
     }
 
+    void display(std::string message, int y=0, int x=0) {
+      mvprintw(y, x, "%s", message.c_str());
+      refresh();
+    }
+
     void refresh() {
      if(parent) {
        touchwin(parent);
      }
      wrefresh(w);
+   }
+
+   void clear() {
+     wclear(w);
+     wclear(parent);
+     std::cerr << "clear" << std::endl;
+     refresh();
    }
 
    void populateRandom() {
