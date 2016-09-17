@@ -54,6 +54,13 @@ public:
     inventory.push_back(Item(i));
   }
 
+  void useItem(unsigned int itemNumber) {
+    inventory[itemNumber].uses--;
+    if(inventory[itemNumber].uses <= 0) {
+      inventory.erase(inventory.begin() + itemNumber);
+    }
+  }
+
   void interact(TerritoryType territory)
   {
 

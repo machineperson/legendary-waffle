@@ -106,6 +106,7 @@ public:
     std::vector<Item> inventory = mob.getInventory();
     if(inventory.size() > itemNumber) {
       outputMessage = "Using " + inventory[itemNumber].name + '\n';
+      mob.useItem(itemNumber);
     }
     else {
       std::cerr << "no inventory entry for index " << itemNumber << std::endl;

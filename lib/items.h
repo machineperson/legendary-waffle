@@ -9,8 +9,10 @@ public:
   std::string name;
   int weight;
   char shortcut;
+  unsigned int uses;
 
-  Item(std::string name_, int weight_, char shortcut_=' ') : name(name_), weight(weight_), shortcut(shortcut_)
+  Item(std::string name_, int weight_, char shortcut_=' ', unsigned int uses_=1)
+  : name(name_), weight(weight_), shortcut(shortcut_), uses(uses_)
   {}
 
 
@@ -19,9 +21,10 @@ public:
 class FoodItem : public Item {
 
 public:
-  FoodItem(std::string name_,  int weight_, char shortcut_=' ') : Item(name_, weight_, shortcut_)
+  FoodItem(std::string name_,  int weight_, char shortcut_=' ')
+    : Item(name_, weight_, shortcut_, 1)
   {
-    
+
   }
 
 
